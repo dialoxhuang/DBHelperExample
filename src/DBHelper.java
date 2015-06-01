@@ -1,13 +1,9 @@
-/*
- * Copyright © 2015 Chengdu Weshare Technology(http://weshare.im)
- *  All rights reserved.
+/*  Dialox Huang(dialox@qq.com) 
  *
  *  Filename:
  *  -----------------------------------------------------------------
  *  YYYY-mm-dd  ticket#XXX
  */
-
-package tv.lesee.model;
 
 /**
  * Created by changh on 15/5/18.
@@ -23,10 +19,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import im.weshare.common.Logger;
-import tv.lesee.model.Channel;
-
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -49,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * Database scheme
      */
-    public static final String DB_NAME = "leseetv";
+    public static final String DB_NAME = "dbhelper";
     public static final int DB_VERSION = 100;    // for version 1.0.0
 
     public static final String TABLE_CHANNELLIST = "channel_list";
@@ -128,7 +120,6 @@ public class DBHelper extends SQLiteOpenHelper {
             mDB = getReadableDatabase();
         }
 
-        Logger.d("mDB=" + mDB);
         mContext = context;
     }
 
@@ -181,7 +172,6 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
 
-        Logger.ENTER();
 
         mDB = db;
 
@@ -194,7 +184,6 @@ public class DBHelper extends SQLiteOpenHelper {
         for (FreqScope scope : scopeArray) {
             String area = scope.mArea;
             for (int i=scope.mBegin; i<=scope.mEnd; i+=scope.mStep) {
-                Logger.d("Insert Freq: " + area + ", " + i );
                 ContentValues values = new ContentValues();
                 values.put(FIELD_ID, (String)null);
                 values.put(FIELD_LOCATION, area);
@@ -231,7 +220,6 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(FIELD_CHANNELTYPE, chn.channelType);
             values.put(FIELD_LOCATION, "CHINA");
             long ret = insert(TABLE_CHANNELLIST, values);
-            Logger.d("insert return: " + ret);
         }
 
     }
@@ -242,7 +230,6 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return
      */
     public long insert(String table, ContentValues values) {
-        Logger.d("Insert values = " + values);
         return mDB.insert(table, null, values);
     }
 
@@ -260,9 +247,6 @@ public class DBHelper extends SQLiteOpenHelper {
                         String selection,
                         String[] selectionArgs,
                         String groupBy, String having, String orderBy, String limit) {
-        Logger.d("Query table = " + table + ", columns = " + columns + ", selection = " + selection +
-                ", selectionArgs = " + selectionArgs + ", groupBy = " + groupBy + ", having = " + having +
-                ", orderBy = " + orderBy + ", limit = " + limit);
         return mDB.query(table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
@@ -273,7 +257,6 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     public Cursor rawQuery(String sql, String[] selectionArgs) {
 
-        Logger.d("rawQuery sql=" + sql + ", selectionArgs=" + selectionArgs);
         return mDB.rawQuery(sql, selectionArgs);
     }
 
@@ -285,7 +268,6 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return
      */
     public long delete(String table, String whereClause, String[] whereArgs) {
-        Logger.d("Delete table=" + table + ", whereClause=" + whereClause + ", whereArgs=" + whereArgs);
         return mDB.delete(table, whereClause, whereArgs);
     }
 
@@ -298,8 +280,6 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return
      */
     public long update(String table, ContentValues values, String whereClause, String[] whereArgs) {
-        Logger.d("Update table=" + table + ", values=" + values + ", whereClause=" + whereClause +
-                ", whereArgs=" + whereArgs);
         return mDB.update(table, values, whereClause, whereArgs);
     }
 
@@ -310,7 +290,6 @@ public class DBHelper extends SQLiteOpenHelper {
      */
     public long deleteAll(String table) {
 
-        Logger.d("Delete all table=" + table);
         return mDB.delete(table, null, null);
     }
 
@@ -325,7 +304,6 @@ public class DBHelper extends SQLiteOpenHelper {
      * @return
      */
     public long storeKeyValue(String key, String value) {
-        Logger.d("key=" + key + ", value="+value);
         ContentValues cv = new ContentValues();
         cv.put(FIELD_VALUE, value);
 
@@ -360,7 +338,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if ( cursor.moveToNext() ) {
             ret = cursor.getString(cursor.getColumnIndex(FIELD_VALUE));
-            Logger.d("key: "+key + ", value=" + ret);
         }
 
         return ret;
@@ -407,7 +384,6 @@ public class DBHelper extends SQLiteOpenHelper {
         // close the cursor
         cursor.close();
 
-        Logger.d("returns: " + ret);
         return ret;
     }
 
@@ -436,7 +412,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        Logger.d("returns: " + ret);
 
         return ret;
     }
@@ -459,7 +434,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         // need to remove the existing channels?
         if (cursor!=null && cursor.getCount()>0 ) {
-            Logger.d("Found existing same channel list name, deleting ...");
             delete(TABLE_CHANNELLIST, FIELD_CHANNELNAME, new String[]{listName});
         }
 
@@ -476,7 +450,6 @@ public class DBHelper extends SQLiteOpenHelper {
             i++;
         }
 
-        Logger.d("" + i + " rows insert!");
         return true;
     }
 
@@ -497,7 +470,6 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<Channel> channelList = new ArrayList<Channel>();
 
         if (cursor==null || cursor.getCount()==0){
-            Logger.w("No channel info on list name: " + listName + ", type: " + channelType);
             return channelList;
         }
 
@@ -559,7 +531,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 null);
 
         if (cursor==null || cursor.getCount()==0) {
-            Logger.w("No Frequencies in Database");
             return new String[] {};
         }
 
