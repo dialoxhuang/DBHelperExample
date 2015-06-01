@@ -1,2 +1,4 @@
 # DBHelperExample
-This is a DBHelper example which extends SQLiteOpenHelper
+
+This is an Android  DBHelper example which extends SQLiteOpenHelper
+
